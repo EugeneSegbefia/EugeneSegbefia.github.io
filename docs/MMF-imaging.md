@@ -14,3 +14,10 @@ Single-mode optical fiber cables are used universally for our day-to-day telecom
 
 [**Speckle vs Input Images**](#fig-1){:id="fig-1"}  
 *A comparison between a possible input image and its corresponding output.*
+
+## Attempts to Solve this problem 
+In the scientific community, there have been multiple attempts to solve this problem, with one of these attempts or methods being the focus of this project the said methods are.
+* The Phase conjunction method.
+* The Matrix Recreation Method
+* Constructing the complete transmission matrix of the fiber using intensity data.
+* Throwing the problem at a neural network.
