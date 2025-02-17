@@ -168,5 +168,75 @@ Here we output the magnitudes of the complex numbers we predict the pixels to ha
 
 
 ### Training 
-A key point of this experiment was to not only build a working dense hidden layer neural network model but it was to explore the effects of different loss functions on the observed predicted images.
+A key point of this experiment was to not only build a working dense hidden layer neural network model but it was to explore the effects of different loss functions on the observed predicted images. In this project we observe the effects  of these loss functions: 
+
+* L1 loss    
+* L2 loss
+* SSIM loss
+* SSIM loss + L1 Loss
+
+The results of the models were compiled and compared for uniformity all models were trained using the same hyperparameters:
+
+```python
+image_dim = 120
+orig_dim = 92
+length_image = 10000
+epochs = 850
+lr = 1e-5
+batch_size_n = 32
+lamb = 0.1
+```
+The other model specifications that are worth nothing are the optimizer used and the reduce learning rate function used in the training of the model. 10,000 image pairs were used in the training of the model. 
+
+```python
+model.compile(optimizer=SGD(learning_rate=lr), loss=loss_function, metrics=['accuracy'])
+    
+    reduce_lr = ReduceLROnPlateau(
+        monitor='loss', factor=0.1, patience=2, min_lr=lr / 1e3, verbose=1
+    )
+    
+    history = model.fit(
+        train_gen,
+        steps_per_epoch=steps_per_epoch,
+        validation_data=val_gen,
+        validation_steps=validation_steps,
+        epochs=epochs,
+        callbacks=[reduce_lr],
+    )
+```
+
+## Results 
+We observe how well the models recreate the input images and compare the fidelity of the images recreated by each model.
+
+The values of these loss functions were the only metric we monitored strictly 
+![Loss Progression](https://EugeneSegbefia.github.io/figures/losstracked.png)  
+
+[**Figure 2: Loss Progression**](#fig-2){:id="fig-2"}  
+*Loss progression of the models over training epochs.*
+
+| Loss Function | Visualization |
+|--------------|--------------|
+| **SSIM Loss** | ![SSIM Loss](https://EugeneSegbefia.github.io/figures/SSIMloss.png) |
+| **L2 Loss** | ![L2 Loss](https://EugeneSegbefia.github.io/figures/l2loss.png) |
+| **L1 Loss** | ![L1 Loss](https://EugeneSegbefia.github.io/figures/L1loss.png) |
+| **SSIM + L1 Loss** | ![SSIM + L1 Loss](https://EugeneSegbefia.github.io/figures/SSIM+l1loss.png) |
+
+[**Figure 3: Model Comparison**](#fig-1){:id="fig-1"}  
+*A comparison of different loss functions experimented on.*  
+
+We observe the clearest results with the model trained with the loss that is a combination if the SSIM loss and the L1 loss.
+
+##Discussion 
+
+While decent results were observed it would be worthwhile to experiment a bit more with the model used such as viewing the effect of adding multiple of these dense hidden layers and observing how it would affect the quality of image recreation. 
+
+It would also be worthwhile to observe the effects of training with a large dataset possibly the entire training data. This would be ideal and possible provided I have access to much stronger computational resources
+
+
+## Conclusion 
+
+Projects done by myself and other members of the scientific community show that there is promise in the use of multimode fiber cables and it is worthwhile to pursue methods to regularize its use in our day-to-day lives. There is more work to be than and this a field of study where there is a lot of room for growth for the improvement and development of the field.
+
+
+
 
