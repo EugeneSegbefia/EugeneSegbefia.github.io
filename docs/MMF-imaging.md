@@ -27,7 +27,7 @@ In the scientific community, there have been multiple attempts to solve this pro
 * Constructing the complete transmission matrix of the fiber using intensity data.
     Inferring the complete transmission matrix using only intensity measurements, avoiding direct phase retrieval.
   
-* _*Throwing the problem at a neural network*_.
+* *_Throwing the problem at a neural network_*.
     Training a neural network to learn the fiber’s transformation and reconstruct the input from the output.
 
 ## The Neural Network Approach 
@@ -38,15 +38,135 @@ The approach to solving this problem that was focused on in this project is the 
 * Convolutional Neural Network - Babak Rahmani et al
 * Single Complex Dense Neural Network - Piergiorio Caramazza et al
 
-
-These works served as guides for me while I explored the problem and started working on making a practical solution to the transmission problem explained above. After careful reading and a bit of experimentation, the model I landed on that I felt held the most promise was the one proposed by Caramazza et al. This architecture involved redesigning the commonly used dense layer to work with complex numbers and in that way reconstruct the transmission matrix of the multimode fiber cable used  which is complex-valued.
+These works served as guides for me while I explored the problem and started working on making a practical solution to the transmission problem explained above. After careful reading and a bit of experimentation, the model I felt held the most promise was the one proposed by Caramazza et al. 
 
 
 ## Data Used
-Image Data was used for the training and testing of the models described in this experiment where the image data  was collected and published by Caramazza et al. The database provided  
+Image Data was used for the training and testing of the models described in this experiment where the image data  was collected and published by Caramazza et al. The database provided contained 50,000 image pairs in the training dataset. I am referring to an input image and its corresponding output speckle pattern image. The test dataset provided contained 1,000 image pairs.
 
 
+## Model Used 
+The model proposed by Caramazza et al which I implemented in this project is fairly rudimentary, all neural network architectures published considered. It consists of an input layer, a complex dense hidden layer, an amplitude layer, and an output layer.  
+A Dense hidden layer is undeniably the most used layer in neural network design and creation regardless of the task the model is intended to work on. This architecture involved redesigning the commonly used dense layer to work with complex numbers and in that way reconstruct the transmission matrix of the multimode fiber cable used  which is complex-valued. 
+
+```python
+def create_complex_model():
+    input_img = Input(shape=(image_dim*image_dim, 2))
+    l = input_img
+    l = ComplexDense(orig_dim*orig_dim, use_bias=False, kernel_regularizer=regularizers.l2(lamb))(l)
+    l = Amplitude()(l)
+    out_layer = l
+    model = Model(inputs=input_img, outputs=[out_layer])
+    return model 
+```
 
 
+### Model Details 
+#### Input Layer 
+For this model, the inputs were the image pairs as they are tensors containing all the pixel information. there number of neurons was equivalent to the number of pixels of the input image of the image pairs.
 
+#### Complex Hidden Layer 
+This layer as mentioned earlier is a spin-off of the complex dense layer, so with the help of some helper functions a complex dense layer was created with the sole purpose of having the neuron values being used be complex numbers.
+
+```python
+class ComplexDense(Layer):
+
+    def __init__(self, output_dim,
+                 activation=None,
+                 use_bias=True,
+                 kernel_initializer='glorot_uniform',
+                 bias_initializer='zeros',
+                 kernel_regularizer=None,
+                 **kwargs):
+        super(ComplexDense, self).__init__(**kwargs)
+        self.output_dim = output_dim
+        self.activation = activations.get(activation)
+        self.use_bias = use_bias
+        self.kernel_initializer = initializers.get(kernel_initializer)
+        self.bias_initializer = initializers.get(bias_initializer)
+        self.kernel_regularizer = regularizers.get(kernel_regularizer)
+
+
+    def build(self, input_shape):
+        self.kernel = self.add_weight(name='kernel',
+                                      shape=(input_shape[1], self.output_dim, 2),
+                                      initializer=self.kernel_initializer,
+                                      regularizer=self.kernel_regularizer,
+                                      #constraint=self.kernel_constraint,
+                                      trainable=True)
+        if self.use_bias:
+            self.bias = self.add_weight(name='bias',
+                                        shape=(self.output_dim, 2),
+                                        initializer=self.bias_initializer,
+                                        #regularizer=self.bias_regularizer,
+                                        #constraint=self.bias_constraint,
+                                        trainable=True)
+        else:
+            self.bias = None
+        super(ComplexDense, self).build(input_shape)
+
+    def call(self, X):
+        # True Complex Multiplication (by channel combination)
+        complex_X = channels_to_complex(X)
+        complex_W = channels_to_complex(self.kernel)
+
+        complex_res = complex_X @ complex_W
+
+        if self.use_bias:
+            complex_b = channels_to_complex(self.bias)
+            complex_res = K.bias_add(complex_res, complex_b)
+
+        output = complex_to_channels(complex_res)
+
+        if self.activation is not None:
+            output = self.activation(output)
+
+        return output
+
+    def compute_output_shape(self, input_shape):
+        return (input_shape[0], self.output_dim, 2)
+
+    def get_config(self):
+        config = {
+            'output_dim': self.output_dim,
+            #'activation': activations.serialize(self.activation),
+            'use_bias': self.use_bias,
+            'kernel_initializer': initializers.serialize(self.kernel_initializer),
+            'bias_initializer': initializers.serialize(self.bias_initializer),
+            'kernel_regularizer': regularizers.serialize(self.kernel_regularizer),
+            #'bias_regularizer': regularizers.serialize(self.bias_regularizer),
+            #'activity_regularizer': regularizers.serialize(self.activity_regularizer),
+            #'kernel_constraint': constraints.serialize(self.kernel_constraint),
+            #'bias_constraint': constraints.serialize(self.bias_constraint)
+        }
+        base_config = super(ComplexDense, self).get_config()
+        return dict(list(base_config.items()) + list(config.items()))
+```
+
+#### Amplitude Layer 
+In this layer, we convert the predicted complex numbers back into real numbers and compare the predicted image data to the target image data it does this by finding the magnitude of the complex number.
+
+```python
+class Amplitude(Layer):
+
+    def __init__(self, **kwargs):
+        super(Amplitude, self).__init__(**kwargs)
+
+    def build(self, input_shape):
+        super(Amplitude, self).build(input_shape)
+
+    def call(self, X):
+        complex_X = channels_to_complex(X)
+        output = tf.abs(complex_X)
+        return output
+
+    def compute_output_shape(self, input_shape):
+        return (input_shape[0], input_shape[1])
+```
+#### Output Layer 
+Here we output the magnitudes of the complex numbers we predict the pixels to have.
+
+
+### Training 
+A key point of this experiment was to not only build a working dense hidden layer neural network model but it was to explore the effects of different loss functions on the observed predicted images.
 
