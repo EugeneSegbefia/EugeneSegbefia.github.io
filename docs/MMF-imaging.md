@@ -226,7 +226,7 @@ The values of these loss functions were the only metric we monitored strictly
 
 We observe the clearest results with the model trained with the loss that is a combination if the SSIM loss and the L1 loss.
 
-##Discussion 
+## Discussion 
 
 While decent results were observed it would be worthwhile to experiment a bit more with the model used such as viewing the effect of adding multiple of these dense hidden layers and observing how it would affect the quality of image recreation. 
 
