@@ -219,7 +219,7 @@ The values of these loss functions were the only metric we monitored strictly
 | **SSIM Loss** | ![SSIM Loss](https://EugeneSegbefia.github.io/figures/SSIMloss.png) |
 | **L2 Loss** | ![L2 Loss](https://EugeneSegbefia.github.io/figures/l2loss.png) |
 | **L1 Loss** | ![L1 Loss](https://EugeneSegbefia.github.io/figures/L1loss.png) |
-| **SSIM + L1 Loss** | ![SSIM + L1 Loss](https://EugeneSegbefia.github.io/figures/SSIMl1loss.png) |
+| **SSIM + L1 Loss** | ![SSIM + L1 Loss](https://EugeneSegbefia.github.io/figures/SSIMlossl1loss.png) |
 
 [**Figure 3: Model Comparison**](#fig-1){:id="fig-1"}  
 *A comparison of different loss functions experimented on.*  
