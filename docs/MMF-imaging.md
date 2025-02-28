@@ -18,31 +18,31 @@ Single-mode optical fiber cables are used universally for our day-to-day telecom
 ## Attempts to Solve this Problem 
 In the scientific community, there have been multiple attempts to solve this problem, with one of these attempts or methods being the focus of this project the said methods are.
 
-* The Phase conjunction method:
+* [The Phase conjunction method](https://opg.optica.org/ol/abstract.cfm?URI=ol-7-11-558):
     Reversing wavefront distortions by capturing and conjugating the phase of the   transmitted light.
 
-* The Matrix Recreation Method:
+* [The Matrix Recreation Method](https://doi.org/10.1038/ncomms1078):
     Reconstructing the fiber's transmission matrix by analyzing known input-output relationships.
 
-* Constructing the complete transmission matrix of the fiber using intensity data.
+* [Constructing the complete transmission matrix of the fiber using intensity data](https://doi.org/10.1038/nphoton.2015.112):
     Inferring the complete transmission matrix using only intensity measurements, avoiding direct phase retrieval.
   
-* *_Throwing the problem at a neural network_*.
+* [*_Throwing the problem at a neural network_*](https://doi.org/10.1364/OL.16.000645):
     Training a neural network to learn the fiber’s transformation and reconstruct the input from the output.
 
 ## The Neural Network Approach 
 The approach to solving this problem that was focused on in this project is the approach that involves training a neural network. There have been various attempts by researchers to successfully transmit image information using different neural network architectures. Some work that directly influenced and inspired my work are: 
 
-* Single Dense Hidden Layer Network - Tom Kuusela
-* Single Dense Hidden Layer Network vs Convolutional Neural Network - Changyan Zhu et al 
-* Convolutional Neural Network - Babak Rahmani et al
-* Single Complex Dense Neural Network - Piergiorio Caramazza et al
+* Single Dense Hidden Layer Network - [Tom Kuusela](https://doi.org/10.1119/5.0102369)
+* Single Dense Hidden Layer Network vs Convolutional Neural Network - [Changyan Zhu et al](https://doi.org/10.1038/s41598-020-79646-8) 
+* Convolutional Neural Network - [Babak Rahmani et al](https://doi.org/10.1038/s41377-018-0074-1)
+* Single Complex Dense Neural Network - [Piergiorio Caramazza et al](https://doi.org/10.1038/s41467-019-10057-8)
 
 These works served as guides for me while I explored the problem and started working on making a practical solution to the transmission problem explained above. After careful reading and a bit of experimentation, the model I felt held the most promise was the one proposed by Caramazza et al. 
 
 
 ## Data Used
-Image Data was used for the training and testing of the models described in this experiment where the image data  was collected and published by Caramazza et al. The database provided contained 50,000 image pairs in the training dataset. I am referring to an input image and its corresponding output speckle pattern image. The test dataset provided contained 1,000 image pairs.
+Image Data was used for the training and testing of the models described in this experiment where the image data  was collected and published by Caramazza et al. The database provided contained *50,000* image pairs in the training dataset. I am referring to an input image and its corresponding output speckle pattern image. The test dataset provided contained 1,000 image pairs.
 
 
 ## Model Used 
