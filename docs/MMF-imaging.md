@@ -4,6 +4,7 @@ permalink: /MMF-imaging
 
 # Imaging through a multimode fiber cable 
 ## Motivation
+
 Single-mode optical fiber cables are used universally for our day-to-day telecommunication needs. A single-mode optical fiber cable allows a single beam of  light to pass through the cable at a time this means we can only encode one pixel of image information on a beam to be transmitted through a cable at a time. This is unfortunately quite inefficient and means that getting one image from one location to another would require using large numbers of these cables. To find a more efficient approach to solving this problem a multimode fiber cable was designed and created the key difference being that it would be able to have multiple "modes" of light pass through it at once. Unfortunately, when we try to do this, pass multiple  beams of light with pixel information we observe mode and phase mixing this is when we observe the electromagnetic fields of these beams interfering and influencing each other. This results in the output image being observed as a speckle pattern image.
 
 
@@ -168,7 +169,7 @@ Here we output the magnitudes of the complex numbers we predict the pixels to ha
 
 
 ### Training 
-A key point of this experiment was to not only build a working dense hidden layer neural network model but it was to explore the effects of different loss functions on the observed predicted images. In this project we observe the effects  of these loss functions: 
+A key point of this experiment was to not only build a working dense hidden layer neural network model but it was to explore the effects of different loss functions on the observed predicted images. In this project we observe the effects  of these [loss functions](https://research.nvidia.com/sites/default/files/pubs/2017-03_Loss-Functions-for/NN_ImgProc.pdf): 
 
 * L1 loss    
 * L2 loss
@@ -235,7 +236,7 @@ It would also be worthwhile to observe the effects of training with a large data
 
 ## Conclusion 
 
-Projects done by myself and other members of the scientific community show that there is promise in the use of multimode fiber cables and it is worthwhile to pursue methods to regularize its use in our day-to-day lives. There is more work to be than and this a field of study where there is a lot of room for growth for the improvement and development of the field.
+Projects done by myself and other members of the scientific community show that there is promise in the use of multimode fiber cables in imaging and it is worthwhile to pursue methods to regularize its use in our day-to-day lives. There is more work to be than and this a field of study where there is a lot of room for growth for the improvement and development of the field.
 
 
 
